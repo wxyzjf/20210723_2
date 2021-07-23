@@ -1,0 +1,191 @@
+
+repartition(4)
+select /*+ BORADCAST(b) */
+instances 15
+barry smcin
+.cache()
+
+-----------------------------------------------------------------------------------------------------------------------------------
+Last login: Fri Jul 24 16:06:03 2020 from cmcpbgw23.hksmartone.com
+
+Enter server name or enter 'passwd' to change passwd: 
+bigdataetl02
+The authenticity of host 'bigdataetl02 (172.30.8.95)' can't be established.
+RSA key fingerprint is 9e:00:48:99:8f:1f:f3:ca:3b:16:4a:d5:2d:13:a0:7c.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'bigdataetl02,172.30.8.95' (RSA) to the list of known hosts.
+Creating home directory for eloisewu.
+[eloisewu@bigdataetl02 ~]$ ls -rlth
+total 0
+[eloisewu@bigdataetl02 ~]$ su - hdsbat
+Password: 
+Last login: Fri Jul 24 15:50:24 HKT 2020 on pts/0
+(base) [hdsbat@bigdataetl02 ~]$ ls -rlht
+total 8.0K
+-rw-rw-r-- 1 hdsbat hdsbat    0 Jul 24 13:51 sys.stderr,
+-rw-rw-r-- 1 hdsbat hdsbat  354 Jul 24 13:56 test_socket.py
+-rw-rw-r-- 1 hdsbat hdsbat 1.4K Jul 24 14:54 Untitled.ipynb
+(base) [hdsbat@bigdataetl02 ~]$ cd /^C
+(base) [hdsbat@bigdataetl02 ~]$ cd /app/HDSBAT/
+(base) [hdsbat@bigdataetl02 HDSBAT]$ ls
+kevinou  url.txt
+(base) [hdsbat@bigdataetl02 HDSBAT]$ ls -rlth
+total 4.0K
+drwxrwxr-x 3 hdsbat hdsbat 66 Jul 24 15:56 kevinou
+-rw-rw-r-- 1 hdsbat hdsbat 81 Jul 24 16:02 url.txt
+(base) [hdsbat@bigdataetl02 HDSBAT]$ cat url.txt 
+http://bigdataetl02:8888/?token=7e398d2b225faf574fd2c6d9973f9ac0c9b7a732064a5708
+(base) [hdsbat@bigdataetl02 HDSBAT]$ 7e398d2b225faf574fd2c6d9973f9ac0c9b7a732064a5708http://bigdataetl02:8888/?token=7e398d2b225faf574fd2c6d9973f9ac0c9b7a732064a5708^C
+(base) [hdsbat@bigdataetl02 HDSBAT]$ jupyter lab
+[I 16:07:47.176 LabApp] The port 8888 is already in use, trying another port.
+[I 16:07:47.177 LabApp] The port 8889 is already in use, trying another port.
+[I 16:07:47.184 LabApp] JupyterLab extension loaded from /opt/miniconda3/lib/python3.7/site-packages/jupyterlab
+[I 16:07:47.184 LabApp] JupyterLab application directory is /opt/miniconda3/share/jupyter/lab
+[I 16:07:47.185 LabApp] Serving notebooks from local directory: /app/HDSBAT
+[I 16:07:47.185 LabApp] The Jupyter Notebook is running at:
+[I 16:07:47.186 LabApp] http://bigdataetl02:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+[I 16:07:47.186 LabApp]  or http://127.0.0.1:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+[I 16:07:47.186 LabApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 16:07:47.188 LabApp] No web browser found: could not locate runnable browser.
+[C 16:07:47.189 LabApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///home/hdsbat/.local/share/jupyter/runtime/nbserver-18022-open.html
+    Or copy and paste one of these URLs:
+        http://bigdataetl02:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+     or http://127.0.0.1:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+^C[I 16:08:23.216 LabApp] interrupted
+Serving notebooks from local directory: /app/HDSBAT
+0 active kernels
+The Jupyter Notebook is running at:
+http://bigdataetl02:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+ or http://127.0.0.1:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+Shutdown this notebook server (y/[n])? No answer for 5s: resuming operation...
+y  
+
+^C[I 16:08:37.648 LabApp] interrupted
+Serving notebooks from local directory: /app/HDSBAT
+0 active kernels
+The Jupyter Notebook is running at:
+http://bigdataetl02:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+ or http://127.0.0.1:8890/?token=16bd3c224303c6a9e99eedf7bd355fb41014aa27af91a722
+Shutdown this notebook server (y/[n])? y
+[C 16:08:38.519 LabApp] Shutdown confirmed
+[I 16:08:38.519 LabApp] Shutting down 0 kernels
+(base) [hdsbat@bigdataetl02 HDSBAT]$ 
+
+
+
+(base) [hdsbat@bigdataetl02 HDSBAT]$ cat url.txt
+http://bigdataetl02:8888/?token=7e398d2b225faf574fd2c6d9973f9ac0c9b7a732064a5708
+
+(base) [hdsbat@bigdataetl02 kevinou]$ ls -l
+total 64
+-rw-rw-r-- 1 hdsbat hdsbat 56604 Jul 24 15:36 test.csv
+-rw-rw-r-- 1 hdsbat hdsbat  1790 Jul 24 16:10 test.ipynb
+-rw-rw-r-- 1 hdsbat hdsbat   555 Jul 24 16:08 Untitled.ipynb
+(base) [hdsbat@bigdataetl02 kevinou]$ 
+
+gzsmc88
+
+
+import findspark
+import pandas
+import matplotlib
+findspark.init('/opt/spark')
+findspark.find()
+from  pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("myAppName").getOrCreate()
+df = spark.read.csv("/app/HDSBAT/kevinou/test.csv")
+df.printSchema()
+
+df.count()
+df.show()
+
+We may use bigdataetl02 for spark study also (3.0.0)  hdsbat/smart2020
+smart2020=> Smart2020
+-----------------------------------------------------------------------------------------------------------------------------------
+free -g
+top
+hadoop mfs -ls /
+hadoop mfs -ls /HDS_VOL_HIVE
+hadoop mfs -ls /HDS_VOL_HIVE/NOTICE.txt
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+spark UI Web log
+pandas read xls
+http://bigdataetl02:8888/lab
+    Later will install redis and flink for study
+https://jupyter-notebook.readthedocs.io/en/stable/public_server.html
+Try to set up ssl and password login 
+https://matplotlib.org/gallery/lines_bars_and_markers/bar_stacked.html#sphx-glr-gallery-lines-bars-and-markers-bar-stacked-py
+https://matplotlib.org/gallery/index.html
+https://matplotlib.org/tutorials/index.html
+https://matplotlib.org/
+matplotlib
+phthon3.7
+-----------------------------------------------------------------------------------------------------------------------------------
+
+min max integer
+rowgroupsize 
+smcin
+hbase oneday spark
+jyta
+joe job
+-----------------------------------------------------------------------------------------------------------------------------------
+
+backup /opt/tmp/el
+echo random data to test_1m.csv
+
+inner join in spark = full join
+
+
+
+gzip -dc gzip_split.sample | split -d -l 400000 - split_part --filter='gzip > $FILE.gz'
+http://bigdatamr08.hksmartone.com:8088/cluster
+
+spark ui and 9g excutor
+
+
+[mapr@bigdatamr10 test_min_max]$          hadoop jar /home/mapr/pq_tools/parquet-tools-1.9.0.jar dump -n /HDS_VOL_TMP/el_test_par_512/part-00000-85c71193-81ae-4ec2-bec2-7fafb2126765-c000.snappy.parquet  | head -500
+Java heap space
+
+parquet-tools-1.11.0.jar
+
+what's the snap
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+1.
+snap > gzip
+3.
+check hadoop file why not sort
+4.
+check sort
+5.
+not need to repartition
+6.
+3 batch
+7.
+full day
+8.
+srcip dstip srcip_num dstip_num
+9.
+tmp disk
+10.
+excutor
+
+-----------------------------------------------------------------------------------------------------------------------------------
+64.1 G  /HDS_VOL_HIVE/FWCDR/start_date=20200723
+
+
+ python
+
+
+
+spark = SparkSession(sc)
+
+print(datetime.now())
+sc._jsc.hadoopConfiguration().setInt("dfs.blocksize",1024*1024*256)
+sc._jsc.hadoopConfiguration().setInt("parquet.block.size",1024*1024*256)

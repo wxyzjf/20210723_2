@@ -1,0 +1,32 @@
+sftp skytree@10.16.9.166
+g5N6AKZacZ3JAY8L
+
+lftp skytree:g5N6AKZacZ3JAY8L@10.16.9.166
+
+lftp -u skytree,g5N6AKZacZ3JAY8L sftp://10.16.9.166
+
+sftp dwftp2@10.16.9.166
+
+lftp 10.16.9.166 -u skytree/g5N6AKZacZ3JAY8L -p 22
+
+
+lftp -u "$SFTP_USERNAME","$SFTP_PASSWORD" sftp://"$SFTP_HOST"
+
+lftp -u appdwftp,XE#v2n0nxL -p 2026 sftp://appfstpsvc
+
+lftp ftpsvc01 -u SMC/dw_ftp,dw000000 -p 2026<<FOftp
+        set ftp:ssl-allow true
+        set ftp:ssl-force true
+        set ftp:ssl-protect-data true
+        set ftp:ssl-protect-list true
+        set ftps:initial-prot
+        set xfer:clobber on
+        cd "/WORLD/TEAMWORK/CAD/BM - ICT/Fixed Network Services/Resell Order"
+        mget *.xls
+        quit
+FOftp
+
+
+
+
+

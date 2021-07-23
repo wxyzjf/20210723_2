@@ -1,0 +1,255 @@
+host:etl08.hksmartone.com:9446
+user:adwbat
+password:smart123
+
+ 
+db: 
+TNS : UDSDWDEV_DEVDWADM = (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = idsdev35.hksmartone.com)(PORT = 1521)) (CONNECT_DATA = (SERVER = DEDICATED) (SERVICE_NAME = DWDEV3)))
+schema: DEV_TMP2
+devdwadm/DWdev_2017
+
+
+
+X_SHKDP_CE
+X_SHKDP_RULE_REF
+X_SHKDP_DICT_REF
+X_SHKDP_CALL_PGM
+
+
+
+
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+ if(len(Input.create_date) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else iconv(Input.create_date[1,10],"D4-YMD[4,2,2]")
+ if(len(Trim(Input.HKID_HASH)) < 1) then " " else Input.HKID_HASH
+iconv("2999-12-31","D4-YMD[4,2,2]")
+
+-------------------------------------------------------------------------------------
+
+sqlplus /@$TDPID
+insert into prd_etl.etl_src_File(JOB_NAME,SYS_NAME,FILENAME_MASK,FILENAME_DATE_FORMAT,DATA_PATH,
+DATE_OFFSET,MONTH_OFFSET,
+CTRL_FILE_MASK,CTRL_FILE_OFFSET,CTRL_FILE_DATE_FORMAT,FILE_LOCATE_TYPE,
+CHECK_EA_FAIL_DIR_FLG,AS_OF_DATE_DETERMINE_METH,CHECK_ZERO_FILE_SIZE,LAST_PROCESS_STAT)
+values('X_SHKDP_CE','USR','test.csv',' ','/opt/etl/prd/etl/APP/USR/X_SHKDP_CE/bin/reload',
+0,0,
+' ',0,' ','copy',
+'N','T','N','C');
+commit;
+
+update prd_etl.etl_job set last_txdate=TO_DATE('2021-03-01','YYYY-MM-DD') where etl_job = 'X_SHKDP_CE';
+
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='X_SHKDP_CE';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'X_SHKDP_CE';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='X_SHKDP_CE';
+commit;
+quit;
+
+touch /opt/etl/prd/etl/preprocess/USR/rerun/x_shkdp_ce.rerun.20210601
+
+------------------------------------------------------------------------------------
+
+sqlplus /@$TDPID
+insert into prd_etl.etl_src_File(JOB_NAME,SYS_NAME,FILENAME_MASK,FILENAME_DATE_FORMAT,DATA_PATH,
+DATE_OFFSET,MONTH_OFFSET,
+CTRL_FILE_MASK,CTRL_FILE_OFFSET,CTRL_FILE_DATE_FORMAT,FILE_LOCATE_TYPE,
+CHECK_EA_FAIL_DIR_FLG,AS_OF_DATE_DETERMINE_METH,CHECK_ZERO_FILE_SIZE,LAST_PROCESS_STAT)
+values('X_SHKDP_RULE_REF','USR','test.csv',' ','/opt/etl/prd/etl/APP/USR/X_SHKDP_RULE_REF/bin/reload',
+0,0,
+' ',0,' ','copy',
+'N','T','N','C');
+commit;
+quit;
+
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='X_SHKDP_RULE_REF';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'X_SHKDP_RULE_REF';
+update prd_etl.etl_job set last_txdate=TO_DATE('2021-04-19','YYYY-MM-DD') where etl_job = 'X_SHKDP_RULE_REF';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='X_SHKDP_RULE_REF';
+
+commit;
+quit;
+
+touch /opt/etl/prd/etl/preprocess/USR/rerun/x_shkdp_rule_ref.rerun.20210420
+ls -l /opt/etl/prd/etl/preprocess/USR/rerun
+
+------------------------------------------------------------------------------------
+
+sqlplus /@$TDPID
+insert into prd_etl.etl_src_File(JOB_NAME,SYS_NAME,FILENAME_MASK,FILENAME_DATE_FORMAT,DATA_PATH,
+DATE_OFFSET,MONTH_OFFSET,
+CTRL_FILE_MASK,CTRL_FILE_OFFSET,CTRL_FILE_DATE_FORMAT,FILE_LOCATE_TYPE,
+CHECK_EA_FAIL_DIR_FLG,AS_OF_DATE_DETERMINE_METH,CHECK_ZERO_FILE_SIZE,LAST_PROCESS_STAT)
+values('X_SHKDP_DICT_REF','USR','test.csv',' ','/opt/etl/prd/etl/APP/USR/X_SHKDP_DICT_REF/bin/reload',
+0,0,
+' ',0,' ','copy',
+'N','T','N','C');
+commit;
+quit;
+
+update prd_etl.etl_job set last_txdate=TO_DATE('2021-03-01','YYYY-MM-DD') where etl_job = 'X_SHKDP_DICT_REF';
+
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='X_SHKDP_DICT_REF';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'X_SHKDP_DICT_REF';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='X_SHKDP_DICT_REF';
+commit;
+quit;
+
+
+touch /opt/etl/prd/etl/preprocess/USR/rerun/x_shkdp_dict_ref.rerun.20210301
+ls -l /opt/etl/prd/etl/preprocess/USR/rerun
+
+
+
+------------------------------------------------------------------------------------
+
+sqlplus /@$TDPID
+insert into prd_etl.etl_src_File(JOB_NAME,SYS_NAME,FILENAME_MASK,FILENAME_DATE_FORMAT,DATA_PATH,
+DATE_OFFSET,MONTH_OFFSET,
+CTRL_FILE_MASK,CTRL_FILE_OFFSET,CTRL_FILE_DATE_FORMAT,FILE_LOCATE_TYPE,
+CHECK_EA_FAIL_DIR_FLG,AS_OF_DATE_DETERMINE_METH,CHECK_ZERO_FILE_SIZE,LAST_PROCESS_STAT)
+values('X_SHKDP_CALL_PGM','USR','test.csv',' ','/opt/etl/prd/etl/APP/USR/X_SHKDP_CALL_PGM/bin/reload',
+0,0,
+' ',0,' ','copy',
+'N','T','N','C');
+commit;
+quit;
+
+
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='X_SHKDP_CALL_PGM';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'X_SHKDP_CALL_PGM';
+update prd_etl.etl_job set last_txdate=TO_DATE('2021-03-01','YYYY-MM-DD') where etl_job = 'X_SHKDP_CALL_PGM';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='X_SHKDP_CALL_PGM';
+
+commit;
+quit;
+
+touch /opt/etl/prd/etl/preprocess/USR/rerun/x_shkdp_call_pgm.rerun.20210401
+ls -l /opt/etl/prd/etl/preprocess/USR/rerun
+
+
+------------------------------------------------------------------------------------
+
+[11:02 AM] Kevin Ou
+    PY ma will prepare batch_id in shkdp_dict_ref source file . We may apply same loading logic like shkdp_ce.
+​[11:02 AM] Kevin Ou
+    I will update script later. 
+​[11:03 AM] Kevin Ou
+    So far just keep going on the report generating
+​[11:20 AM] Eloise Wu
+    根据batch_id groupby  你意思是想要跑一次u job 出两份不同月份的report?
+​[11:20 AM] Eloise Wu
+    几个月就出几份的意思？
+​[11:20 AM] Kevin Ou
+    我问问先
+​[11:21 AM] Kevin Ou
+    对。
+​[11:21 AM] Kevin Ou
+    by batch id 出
+​[11:26 AM] Kevin Ou
+    d_shkdp_ce
+​[11:26 AM] Kevin Ou
+    delete from shkdp_ce where batch_id in d_shkdp_ce
+
+
+
+[11:26 AM] Eloise Wu
+    src file 1 mon
+​[11:27 AM] Eloise Wu
+    u job 1 week
+​[11:27 AM] Eloise Wu
+    $F_D_MONTH[0] = "2021-02-01";
+​[11:27 AM] Eloise Wu
+     master_dev.pl 
+
+
+
+
+[11:28 AM] Kevin Ou
+    c job
+|----  shkdp_ce ---append d table batch_id(delete and insert)
+|----  shkdp_dict_ref ---append d table batch_id(delete and insert)
+|----  shkdp_rule --- refresh(truncate and insert)
+|----  b job ----
+|----- u job ----
+​[11:29 AM] Kevin Ou
+    04-21
+​[11:29 AM] Kevin Ou
+    CE_210401.csv 
+​[11:29 AM] Kevin Ou
+    CE_210401_code.csv
+​[11:30 AM] Kevin Ou
+    rule.csv
+​[11:30 AM] Kevin Ou
+    b job
+​[11:30 AM] Kevin Ou
+    u job (all effective batch_id)
+
+
+sftp dwftp2@10.16.9.166 
+
+cd /shkdp
+
+cd /opt/etl/output/RPT/Z_SHKDP_RPT
+
+cd /opt/etl/prd/etl/auto_gen
+ls -l *u_shkdp_rpt*
+
+
+lftp sftp://10.16.9.166  -p 22 -u dwftp2
+        set ssl:verify-certificate no
+        set ftp:ssl-allow true
+        set ftp:ssl-force false
+        set ftp:ssl-protect-data true
+        set ftp:ssl-protect-list true
+lcd /opt/etl/output/RPT/Z_SHKDP_RPT
+put SHKDP_RPT_20210423_*.csv
+
+
+
+00 08 * * 1 ksh /home/adwbat/script/RUN_EA_JOB.ksh y_shkdp_rpt
+
+
+
+
+
+
+insert into PRD_ETL.ETL_UJOB_REF
+(
+ETL_SYSTEM, ETL_JOB, REMARKS, 
+SEQ_ID, FREQUENCY, FILENAME, 
+DW_DB_UPDATE_FLG, REWARD_RELATE_FLG, 
+REWARD_RELATE_DESC, EMAIL_SEND_FLG, 
+EMAIL_SUBJECT, EMAIL_RECIPIENT, EMAIL_RECIPIENT_DEPT, 
+EMAIL_RECIPIENT_SOURCE, FTP_UPLOAD_FLG, FTP_UPLOAD_SERVER, 
+FTP_UPLOAD_PATH, FTP_PATH_OWNER, OTHER_DB_UPDATE_FLG, 
+OTHER_DB_UPDATE_DB_TABLE, OTHER_DB_UPDATE_DATASTAGE_JOB, 
+CREATE_TS, REFRESH_TS
+)values('RPT','U_SHKDP_RPT',' ',
+1,'Weekly','SHKDP_RPT_YYYYMMDD_CEYYMM.csv',
+'Y','N',
+'SHKDP commission','Y',
+'SHKDP report on yyyy-mm-dd','Eloise Wu;Kevin Ou;Stephen Lee;PY Ma','IS-DW;Postpaid Acquisition',
+'parameter: U_SHKDP_RPT','N',' ',
+' ',' ','N',
+' ',' ',
+sysdate,sysdate
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

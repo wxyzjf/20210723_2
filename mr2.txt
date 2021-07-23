@@ -1,0 +1,95 @@
+18
+23
+22
+21
+20
+19
+
+
+20210111
+19
+20
+23
+24
+25 check tmr
+
+
+put live
+add par
+
+h_fw_pq
+H_FWCDR_PQ
+
+20210117
+
+drop partitions
+
+20210125    load on 20210204
+20210126    load on 20210205
+
+gzip -du
+
+H_FWCDR_PQ
+22-26
+
+/opt/mapr/spark/spark-2.4.4/bin/spark-submit --master yarn --deploy-mode cluster test.py  
+
+
+
+from __future__ import print_function
+
+from pyspark.sql import SparkSession
+
+from pyspark.sql import Row
+
+from pyspark.sql.types import *
+
+from datetime import datetime,timedelta
+
+from pyspark import SparkContext,SparkConf
+
+import sys
+
+spark = SparkSession \
+    .builder \
+    .appName("fwcdr") \
+    .config("spark.master","yarn") \
+    .config("spark.executor.memory","4G")\
+    .config('spark.executor.instances',30) \
+    .getOrCreate() 
+
+
+dffwpq=spark.read.parquet("//HDS_VOL_HIVE/FWCDR_PQ/trx_date=20210122")
+#dffwpq.printSchema()
+
+dffwpq.createOrReplaceTempView("t_pq")
+
+
+df = spark.sql("select distinct srcip_3rd,srcip_num,ts,srcip,dstip,send_vol,recv_vol,srv,pkey from t_pq") \
+        .repartition('pkey')\
+        .write.partitionBy('pkey') \
+        .save("/HDS_VOL_HIVE/el_tmp/trx_date=20210122",mode='append',compression='gzip')      
+
+#df.show()
+
+
+
+
+
+
+hive -e "set hive.cli.print.header=true; select * from vw_msc_cdr where msisdn=98748669 and call_start_date between '2019-09-01' and '2020-11-30' and part_key between 20190901 and 20201130;" | sed 's/[\t]/,/g'  > /app/HDSBAT/reload/test_e/unload/unload_vw_msc_cdr.csv
+
+
+select * from vw_msc_cdr where msisdn=98748669 and call_start_date between '2019-09-01' and '2020-11-30' and part_key between 20190901 and 20201130 limit 10;
+
+
+[11:47 AM] Kevin Ou
+     /opt/mapr/spark/spark-2.4.4/bin/spark-submit --master yarn --deploy-mode cluster ebm_session.py
+?[11:47 AM] Kevin Ou
+    ebm calculate session . @all
+?[11:48 AM] Kevin Ou
+    /app/HDSBAT/reload
+?[11:52 AM] Kevin Ou
+    https://apmaprp01.hksmartone.com:18480/history/application_1614173005813_10887/1/jobs/
+?[11:52 AM] Kevin Ou
+    spark log 

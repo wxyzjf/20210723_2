@@ -1,0 +1,216 @@
+select * from prd_adw.subr_info_hist
+CUST_NUM
+SUBR_NUM
+START_DATE
+SUBR_SW_ON_DATE
+SUBR_SW_OFF_DATE
+SUBR_STAT_CD
+END_DATE
+ 
+
+
+select * from prd_adw.bill_servs
+CUST_NUM
+SUBR_NUM
+BILL_SERV_CD
+BILL_START_DATE
+BILL_END_DATE
+
+
+
+
+Raw data report : table name and col type and col name?
+CUST_NUM
+SUBR_NUM
+BILL_SERV_CD(Bill Code)
+START_DATE
+END_DATE
+---
+No.
+USER_ID
+CAMP_ID
+PRODUCT_SKU
+SUBSCRIPTION_START_DATE(BILL_START_DATE)
+SUBSCRIPTION_CANCELLATION_DATE(BILL_END_DATE)
+SUBSCRIPTION_CURRENT_MONTH(SUBR_SW_ON_DATE)
+DEMO_UNIT(Y:NON-REVENUE  N:REVENUE)
+CANCEL_UNIT(Y:cancel in current month  N:non cancel in current month)
+BILLABLE_UNIT(N:DEMO_UNIT=Y OR CANCEL_UNIT=Y)
+
+
+
+Billing Summary : table name and col type and col name?
+month
+camp_id
+product_sku
+description
+billable_units
+unit_price(USD)
+sub_ttl(USD)
+
+
+
+
+It is from external application so please create the ETL job under APS.  May be use D_NORTON_APPS. 
+
+
+
+
+
+APS/D_NORTON_CAMP_ID_MAP
+    D_NORTON_ACR_MAP
+
+    NORTON_CAMP_ID_MAP(start_date,end_date,script_type=HIST_SCRIPT_EXPIRE)
+    NORTON_ACR_MAP(start_date,end_date,script_type=HIST_SCRIPT_EXPIRE)
+
+
+ADW/B_NORTON_RPT_001(Raw data report)
+    B_NORTON_RPT_002(Billing Summary)
+    do not need to save records
+
+RPT/U_NORTON_RPT
+
+
+
+/opt/etl/prd/etl/APP/APS/D_NORTON_CAMP_ID_MAP/bin/d_norton_camp_id_map0010.pl
+/opt/etl/prd/etl/APP/ADW/B_NORTON_CAMP_ID_MAP/bin/b_norton_camp_id_map0010.pl
+/opt/etl/prd/etl/APP/APS/D_NORTON_ACR_MAP/bin/d_norton_acr_map0010.pl
+/opt/etl/prd/etl/APP/ADW/B_NORTON_ACR_MAP/bin/b_norton_acr_map0010.pl
+
+
+/opt/etl/prd/etl/APP/ADW/B_NORTON_RPT/bin/b_norton_rpt0010.pl
+/opt/etl/prd/etl/APP/ADW/B_NORTON_RPT/bin/b_norton_rpt0020.pl
+
+
+/opt/etl/prd/etl/APP/RPT/U_NORTON_RPT/bin/u_norton_rpt0010.pl
+/opt/etl/prd/etl/APP/RPT/U_NORTON_RPT/bin/u_norton_rpt0020.pl
+
+
+D_NORTON_APPS
+NORTON_RPT
+B_NORTON_RPT
+
+ADW/B_NORTON_RPT
+
+RPT/U_NORTON_RPT
+
+
+
+
+-----------------------------------------------------------------------------------
+
+
+insert into prd_etl.etl_src_File(
+JOB_NAME,
+SYS_NAME,
+FILENAME_MASK,
+FILENAME_DATE_FORMAT,
+DATA_PATH,
+DATE_OFFSET,
+FILE_LOCATE_TYPE,
+PULL_START_DATE_LIST,
+PULL_START_TIME_LIST,
+CHECK_EA_FAIL_DIR_FLG,
+AS_OF_DATE_DETERMINE_METH,
+CHECK_ZERO_FILE_SIZE,
+LAST_PROCESS_STAT)
+values('D_NORTON_CAMP_ID_MAP','APS','camp_id_mapping.[date].csv','%Y%m%d','/opt/etl/filein/tmp',-1,'copy',
+'*:*:*','10:00','N','T','Y','C');
+
+insert into prd_etl.etl_src_File(
+JOB_NAME,
+SYS_NAME,
+FILENAME_MASK,
+FILENAME_DATE_FORMAT,
+DATA_PATH,
+DATE_OFFSET,
+FILE_LOCATE_TYPE,
+PULL_START_DATE_LIST,
+PULL_START_TIME_LIST,
+CHECK_EA_FAIL_DIR_FLG,
+AS_OF_DATE_DETERMINE_METH,
+CHECK_ZERO_FILE_SIZE,
+LAST_PROCESS_STAT)
+values('D_NORTON_ACR_MAP','APS','acr_mapping.[date].csv','%Y%m%d','/opt/etl/filein/tmp',-1,'copy',
+'*:*:*','10:00','N','T','Y','C');
+-----------------------------------------------------------------------------------
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='D_NORTON_CAMP_ID_MAP';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'D_NORTON_CAMP_ID_MAP';
+update prd_etl.etl_job set last_txdate=TO_DATE('2020-07-09','YYYY-MM-DD') where etl_job = 'D_NORTON_CAMP_ID_MAP';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='D_NORTON_CAMP_ID_MAP';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'B_NORTON_CAMP_ID_MAP';
+update prd_etl.etl_job set last_txdate=TO_DATE('2020-07-09','YYYY-MM-DD') where etl_job = 'B_NORTON_CAMP_ID_MAP';
+commit;
+touch /opt/etl/prd/etl/preprocess/APS/rerun/d_norton_camp_id_map.rerun.20200710
+
+
+
+sqlplus /@$TDPID
+delete prd_etl.etl_received_file where etl_job='D_NORTON_ACR_MAP';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'D_NORTON_ACR_MAP';
+update prd_etl.etl_job set last_txdate=TO_DATE('2019-11-25','YYYY-MM-DD') where etl_job = 'D_NORTON_ACR_MAP';
+update prd_etl.etl_src_file set last_process_start_ts=null where JOB_NAME='D_NORTON_ACR_MAP';
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'B_NORTON_ACR_MAP';
+update prd_etl.etl_job set last_txdate=TO_DATE('2019-11-25','YYYY-MM-DD') where etl_job = 'B_NORTON_ACR_MAP';
+commit;
+/opt/etl/prd/etl/preprocess/APS/rerun>touch d_norton_acr_map.rerun.20191126
+-----------------------------------------------------------------------------------
+insert into PRD_ETL.ETL_AUTO_GEN_PK values('MIG_ADW','NORTON_CAMP_ID_MAP','CAMP_ID');
+insert into PRD_ETL.ETL_AUTO_GEN_PK values('MIG_ADW','NORTON_ACR_MAP','USERPIN');
+-----------------------------------------------------------------------------------
+sqlplus /@$TDPID
+update prd_etl.etl_job set last_jobstatus='Ready' where etl_job = 'B_NORTON_RPT';
+update prd_etl.etl_job set last_txdate=TO_DATE('2019-11-12','YYYY-MM-DD') where etl_job = 'B_NORTON_RPT';
+
+-----------------------------------------------------------------------------------
+
+sftp dwftp2@10.16.9.166 
+cd /Norton/norton_report
+
+
+Dear Eloise,
+
+Please use below SFTP server to upload the monthly report:
+
+SFTP server: wftp2.smartone.com 
+Port: 9822
+Path: /reports
+
+Password: (use your current password)
+
+
+
+
+
+
+20210127：
+select * from mig_adw.NORTON_CAMP_ID_MAP  --32
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

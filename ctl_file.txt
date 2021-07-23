@@ -1,0 +1,27 @@
+OPTIONS(SKIP=1)
+load data
+infile '/opt/etl/prd/etl/preprocess/USR/script/el/02/OUT/x_bm_comm_rpt_ict_excost.csv'
+append into table MIG_ADW.X_BM_COMM_RPT_ICT_EXCOST
+fields terminated by ','
+trailing nullcols
+(
+falg_file,
+Extra_Cost,
+subr_num
+)
+
+
+
+
+sqlldr userid=mig_adw/Dwu2091#_mw@$TDPID control='/opt/etl/prd/etl/preprocess/USR/script/el/02/OUT/test.ctl'
+
+
+
+
+
+
+
+
+
+
+

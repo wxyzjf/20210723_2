@@ -1,0 +1,166 @@
+if (len(trim(Input.CREATED_DATE)) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else  iconv(Input.CREATED_DATE[1,12],"D4-DMY[2,2,4]")   
+if (len(trim(Input.CREATED_DATE)) < 1) then 0 else Convert(":","",Input.CREATED_DATE[13,8]):'00'
+
+if(len(Trim(DSLink3.RFU_DATETIME)) < 1) then "1900-01-01 00:00:00" 
+else oconv(iconv(DSLink3.RFU_DATETIME[1,11],"D4-DMY[2,A,4]"),"D4-YMD[4,2,2]"):" ": trim(DSLink3.RFU_DATETIME[13,5]:':00')
+
+if(len(Trim(DSLink3.ACCOUNT)) < 1) then " " else DSLink3.ACCOUNT
+
+if(len(Trim(Input.create_date)) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else iconv(Input.create_date[1,10],"D4-YMD[4,2,2]")
+If(LEN(trim(Input.STATUS_CHANGED_DATE)) < 1) Then 0 else Convert(':','',trim(Input.STATUS_CHANGED_DATE)[12,8])
+
+if(len(Trim(DSLink3.RFU_DATETIME)) < 1) then oconv(iconv("1900-01-01","D4-YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv("00:00:00","MTS:"),"MTS:")
+else oconv(iconv(DSLink3.RFU_DATETIME[1,10],"D4/MDY[2,2,4]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(DSLink3.RFU_DATETIME[12,8],"MTS:"),"MTS:")
+
+
+if(len(trim(Input.CREATED_DATE)) < 1) then "1900-01-01 00:00:00"
+else oconv(Input.CREATED_DATE,"D4-YMD[4,2,2] MTS")
+
+DATE()
+
+
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+---------------------------------------------------------------------------------------------------------------------
+ if(len(trim(DSLink3.UPDATED_DATE_TIME)) < 1) then "1900-01-01 00:00:00"
+else oconv(iconv(DSLink3.UPDATED_DATE_TIME,"D4-YMD[4,2,2] MTS"),"D4-YMD[4,2,2] MTS")
+---------------------------------------------------------------------------------------------------------------------
+
+
+If(LEN(trim(Input.STATUS_CHANGED_DATE)) < 1) Then 0 else Convert(':','',trim(Input.STATUS_CHANGED_DATE)[12,8])
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+
+if(len(Trim(DSLink3.ACCOUNT)) < 1) then " " else DSLink3.ACCOUNT
+if(len(Trim(Input.create_date)) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else iconv(Input.create_date[1,10],"D4-YMD[4,2,2]")
+
+oconv(iconv(Input.file_time[1,10],"D4/YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(Input.file_time[12,8],"MTS:"),"MTS:")
+
+if(len(Trim(DSLink3.RFU_DATETIME)) < 1) then oconv(iconv("1900-01-01","D4-YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv("00:00:00","MTS:"),"MTS:")
+else oconv(iconv(DSLink3.RFU_DATETIME[1,10],"D4/MDY[2,2,4]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(DSLink3.RFU_DATETIME[12,8],"MTS:"),"MTS:")
+
+
+
+if(len(Trim(DSLink3.RFU_DATETIME)) < 1) then oconv(iconv("1900-01-01","D4-YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv("00:00:00","MTS:"),"MTS:")
+else oconv(iconv(DSLink3.RFU_DATETIME[1,10],"D4/MDY[2,2,4]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(DSLink3.RFU_DATETIME[12,8],"MTS:"),"MTS:")
+
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+if(len(Trim(DSLink3.ACCOUNT)) < 1) then " " else DSLink3.ACCOUNT
+
+
+
+
+if(len(Trim(Input.create_date)) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else iconv(Input.create_date[1,10],"D4-YMD[4,2,2]")
+
+
+
+
+oconv(iconv(Input.file_time[1,10],"D4/YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(Input.file_time[12,8],"MTS:"),"MTS:")
+
+
+
+
+
+
+
+
+
+
+
+
+
+oconv(iconv(Input.file_time[1,10],"D4/YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":oconv(iconv(Input.file_time[12,8],"MTS:"),"MTS:")
+
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+
+if(len(Input.client_ip) < 1) then " " else Input.client_ip
+
+
+
+
+
+oconv(iconv(Input.trx_timestamp[1,4]:"-":Input.trx_timestamp[5,2]:"-":Input.trx_timestamp[7,2],"D4-YMD[4,2,2]"),"D4-YMD[4,2,2]"):" ":OCONV(iconv(Input.trx_timestamp[9,2]:":":Input.trx_timestamp[11,2]:":":Input.trx_timestamp[13,2], "MTS:"),"MTS:")
+
+
+
+
+
+
+
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+
+
+
+
+
+if(len(Input.REDEEM_DATE) < 1) then iconv("1900-01-01","D4-YMD[4,2,2]") else iconv(Input.REDEEM_DATE[1,10],"D4-YMD[4,2,2]")
+
+
+
+if(len(Input.REDEEM_DATE) < 1) then "000000" else Input.REDEEM_DATE[12,2]:Input.REDEEM_DATE[15,2]:Input.REDEEM_DATE[18,2]
+OCONV(DATE(), "D4-YMD[4,2,2]") : " " : OCONV(TIME(), "MTS:")
+
+
+
+from if(len(DSLink4.OLD_EXPIRY_TIME) < 1) then 0 else DSLink4.OLD_EXPIRY_TIME to if(len(trim(DSLink4.OLD_EXPIRY_TIME)) < 8) then 0 else Convert(":","",DSLink4.OLD_EXPIRY_TIME)
+
+
+if(len(Trim(Input.Warehouse)) < 1) then " " else Trim(Input.Warehouse)
+
+
+
+
+Trim(NullToZero(Input.RRP_Price))
+
+
+if(len(Trim(Input.TRANSFER_AMOUNT)) < 1) then "0"  else Trim(Input.TRANSFER_AMOUNT)
+
+
+
+
+"1900-01-01 00:00:00"
+
+if(len(Trim(Input.HSF_ENTITLE_AMT)) < 1) then 0  else Trim(Input.HSF_ENTITLE_AMT)
+
+
+if(len(Trim(Input.CARD_MSISDN)) < 1) then " " else Input.CARD_MSISDN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

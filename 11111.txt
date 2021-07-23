@@ -1,0 +1,237 @@
+
+USR
+-rwxr-xr-x 1 adwbat dstage  797 Jul  3 11:48 X_BM_COMM_RPT_ICT_REF.ksh
+-rwxr-xr-x 1 adwbat dstage  755 Jul  3 15:25 x_bm_comm_rpt_ict_ref.pl
+-rwxr-xr-x 1 adwbat dstage 1.3K Jul 13 15:16 x_bm_comm_rpt_ict_excost_02.pl
+-rwxr-xr-x 1 adwbat dstage 1.1K Jul 13 16:00 X_BM_COMM_RPT_ICT_EXCOST.ksh
+-rwxr-xr-x 1 adwbat dstage 1.4K Jul 13 16:35 x_bm_comm_rpt_ict_excost_01.pl
+-rw-r--r-- 1 adwbat dstage  48K Oct 14 10:33 X_RBD_KPI_ODR
+-rwxr-xr-x 1 adwbat dstage  911 Oct 28 14:48 X_SHKDP_RPT.ksh.bak
+-rwxr-xr-x 1 adwbat dstage  871 Oct 28 16:15 x_shkdp_rpt.pl.bak
+-rwxr-xr-x 1 adwbat dstage  910 Oct 29 10:54 X_SHKDP_RPT.ksh
+-rwxr-xr-x 1 adwbat dstage 1.5K Oct 29 10:55 x_shkdp_rpt.pl    XLSX
+
+
+RBD
+drwxr-xr-x 2 adwbat dstage 4.0K Oct 14 12:28 X_RBD_KPI_ODR
+-rwxr-xr-x 1 adwbat dstage 1.6K Oct 14 14:30 X_RBD_KPI_ODR.ksh
+-rw-r--r-- 1 adwbat dstage  459 Oct 15 12:25 X_RBD_KPI_ODR.log
+MIG_ADW.X_RBD_KPI_DEPRECIATION
+------------------
+
+
+ba spark job
+joe mail
+TDPWD  
+dbwallet
+datastage job
+teams chat room
+Hadoop job information for Stage-1: number of mappers: 99; number of reducers: 0
+tnsnames.ora
+read mail joe datastage 3 mails and stephen
+
+vi view
+alter
+line terminal
+
+ict
+
+shk
+
+---
+
+retrieve the CNSS raw data(all fields in csv) in MAPR  
+
+mddb  inbound roam usg   rm new job and old pro job
+Update Cognos doc in apcogwspw21 
+casd sold
+add mddb email
+
+corp d job  how to chuan file date as col value
+
+ict job remove those unuse col
+
+DRS and SMS Commission
+
+
+mig_adw.RBD_KPI_ODR put live
+
+norton
+
+FW: [SR0002530] Store Depreciation for Profitability by Store Report
+
+
+
+
+join view? 
+bm
+decode 2 filter  | >=1
+if
+norton mail
+
+
+
+[10:42 AM] Eloise Wu
+    我这边recall 失败   你那边会有消息提示的吗
+​[10:59 AM] Eloise Wu
+    8-10的数会删吗
+​[11:00 AM] Eloise Wu
+    我还没back up
+
+
+
+
+mddb
+
+
+back mr job
+bigdatamr09
+/opt/reload/script/dw_add_partitions_fwpq.sh
+
+bigdatamr10
+/home/mapr/el/test/bigdataetl02/daily/script/dw_load_fwcdr_parquet.py
+/home/mapr/el/test/bigdataetl02/daily/script/dw_load_fwcdr_parquet.sh
+
+
+
+
+norton kelvin
+
+      --and tmpd.SALESMAN_CD like 'CA%';
+b job date
+
+corp mail
+
+
+
+
+
+
+
+desc billimg.BM_SMS_COMM_PROFILE_T
+
+where COMM_SALESMAN = ' ' or COMM_team = ' '
+
+rerun bm_sms_comm_02.sql
+
+darrel delard code
+
+sql date
+remark sql and script
+
+report
+
+
+cognos
+
+back toad sql
+
+
+qingjia
+
+
+
+
+
+
+
+[10:35 AM] Kevin Ou
+    from (select ACCOUNT,MSISDN,USER_ID,START_DATE,END_DATE
+      from ${​​​​​​​etlvar::ADWDB}​​​​​​​.NORTON_ACR_MAP
+      where &rpt_e_date -1 between START_DATE and END_DATE) a
+left outer join ${​​​​​​​etlvar::ADWDB}​​​​​​​.bill_servs b
+on a.ACCOUNT = b.CUST_NUM and a.MSISDN = b.SUBR_NUM
+   and b.BILL_END_DATE >= &rpt_s_date
+   and b.BILL_START_DATE <= &rpt_e_date -1
+​[10:41 AM] Kevin Ou
+    
+
+case when VW_PREPD_POSTPAID_SUBR_N1.Dealer_Cd = ' ' then VW_ALL_PROFILING_N2.Dealer_Cd
+
+         else VW_PREPD_POSTPAID_SUBR_N1.Dealer_Cd
+
+       end  as  Dealer_Code
+
+
+
+​[10:41 AM] Kevin Ou
+    call back for sms salesman code logic 
+​[11:07 AM] Kevin Ou
+    set timing on;
+​[11:08 AM] Kevin Ou
+    prompt '[ abddd]';
+
+
+
+
+mddb delete log 111
+
+
+
+
+
+
+
+
+
+case when where
+
+schedule
+
+
+   CUST_NUM
+  ,SUBR_NUM
+   a.ACCOUNT
+  ,a.MSISDN
+
+
+
+
+nohup ksh job.ksh &
+
+
+
+
+
+mail mddb
+mddb 
+
+
+parquet job  
+sms  
+
+rick ftp
+
+corp
+
+
+========
+outlook mail check
+vasa !!!
+rick sec
+
+zhengli shoutou job
+support case monday
+
+ if ($iRow == 0) {
+                        next;
+                        }
+                if ($iRow == 1) {
+                        next;
+                        }
+                if ($iRow == 2) {
+                        next;
+                        }
+                if ($iRow == 3) {
+                        next;
+                        }
+
+ict
+print
+
+email
+
+weeklywork
+mapr
+
+

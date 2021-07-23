@@ -1,0 +1,102 @@
+Source doc :
+    /user/mikecheng/ic_video_conference_202005011_by_day_20200401
+Target folder: 
+Destination
+Server bdmrdev01
+Folder Path /sna2/data_in/mapr/20200511_video_conference/20200401
+ 
+
+ 
+
+Step ))) 
+ 
+login bigdataetl01
+
+ 
+
+su - hdsbat
+$mart2018
+Smart2020
+
+ 
+
+cd /app/HDSBAT/cvtdata/reload/
+#### get file from hdfs
+hadoop fs -copyToLocal 
+
+
+
+
+
+
+#### put to user specify folder
+sftp adwftp@bdmrdev01
+cd /sna2/data_in/mapr/20200511_video_conference/20200401
+
+cd /sna2/data_in/mapr/20200514_video_conference
+/sna2/data_in/mapr/20200721_eo
+
+[??10:19] Kevin Ou
+    
+
+Data is ready.
+Can you please send the folders to 
+
+Destination
+Server bdmrdev01
+Folder Path /sna2/data_in/mapr/20200513_video_conference
+
+
+?[??10:19] Kevin Ou
+    
+Source path :/user/mikecheng/ic_video_conference_by_day_202004*
+
+
+
+hadoop fs -copyToLocal /HDS_VOL_TMP/ic/new_ic_video_conference_by_day_20200412  /app/HDSBAT/cvtdata/reload/t_e
+
+hadoop fs -ls /HDS_VOL_TMP/ic/new_ic_video_conference_by_day_20200414/
+  /HDS_VOL_TMP/ic/new_ic_video_conference_by_day_20200414 and  /HDS_VOL_TMP/ic/new_ic_video_conference_by_day_20200412
+
+
+
+
+[上午9:43] Kevin Ou
+    
+
+
+Server bdmrdev01
+Folder Path /sna2/data_in/mapr/20200515_video_zoom 
+
+hadoop fs -ls /user/mikecheng
+
+
+
+hadoop fs -copyToLocal /HDS_VOL_TMP/ic/zoom_20200415_30 /app/HDSBAT/cvtdata/reload/t_e/t
+
+hadoop fs -ls /HDS_VOL_TMP/ic/zoom_20200415_30
+
+
+
+
+Please help to copy file  /HDS_VOL_TMP/ic/netflix_by_day_2020*/* to bdmrdev01
+
+Folder Path /sna2/data_in/mapr/20200529_netflix
+
+
+
+/HDS_VOL_TMP/ic/adaptor_5g_by_day_*
+to sna2
+
+
+
+
+
+
+
+can you please help transfer the files to /sna2/data_in/mapr?
+
+
+	
+/HDS_VOL_TMP/ic/zoom_users_20200608
+	/HDS_VOL_TMP/ic/ms_teams_users_20200608

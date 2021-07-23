@@ -1,0 +1,106 @@
+Last login: Fri Oct 23 09:59:42 2020 from cmcpbgw24.hksmartone.com
+
+Enter server name or enter 'passwd' to change passwd: 
+bigdataetl02
+Last login: Fri Aug  7 16:39:30 2020 from 172.20.86.214
+[eloisewu@bigdataetl02 ~]$ ls -rlt
+total 0
+[eloisewu@bigdataetl02 ~]$ sqlline -u "jdbc:drill:zk=bigdatamr08.hksmartone.com:5181,bigdatamr09.hksmartone.com:5181,bigdatamr10.hksmartone.com:5181" -n hdsbat -p smart123sqlline -u "jdbc:drill:zk=bigdatamr08.hksmartone.com:5181,bigdatamr09.hksmartone.com:5181,bigdatamr10.hksmartone.com:5181" -n hdsbat -p smart123^C
+[eloisewu@bigdataetl02 ~]$ clear
+
+set -o vi
+
+ping bigdatamr08 09 10
+df -kh 
+
+hadoop mfs -ls /HDS_VOL_TMP/
+
+
+/home/mapr [6]> ls /
+bin  boot  dev  etc  home  install  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+/home/mapr [7]> cd /nfs^C
+/home/mapr [7]> cd /var/
+/var [8]> ls
+adm  cache  crash  db  empty  games  gopher  kerberos  lib  local  lock  log  mail  nis  opt  preserve  run  spool  tmp  yp
+/var [9]> cd spool/
+anacron/  at/       cron/     lpd/      mail/     plymouth/ postfix/  rhsm/     
+/var [9]> cd spool/
+anacron/  at/       cron/     lpd/      mail/     plymouth/ postfix/  rhsm/     
+/var [9]> cd spool/
+anacron/  at/       cron/     lpd/      mail/     plymouth/ postfix/  rhsm/     
+/var [9]> cd spool/^C
+
+
+
+
+http://bigdatamr09.hksmartone.com:8088/proxy/application_1599119998524_0102/http://bigdatamr09.hksmartone.com:8088/proxy/application_1599119998524_0102/http://bigdatamr09.hksmartone.com:8088/proxy/application_1599119998524_0102/http://bigdatamr09.hksmartone.com:8088/proxy/application_1599119998524_0102/http://bigdatamr09.hksmartone.com:8088/proxy/application_15991199985
+password
+
+
+maprcli
+
+
+maprcli nodes services
+ maprcli node
+
+ ps -ef|grep node  
+
+
+sqlline -u "jdbc:drill:zk=bigdatamr08.hksmartone.com:5181,bigdatamr09.hksmartone.com:5181,bigdatamr10.hksm                       artone.com:5181" -n hdsbat -p smart123                                                                                                                       
+                                            
+
+cat /home/mapr/el/test/bigdataetl02/daily/script/dw_load_fwcdr_parquet.sh       
+
+ crontab -l           
+
+
+ hadoop fs -ls maprfs:///HDS_VOL_HIVE/FWCDR       
+
+ cat dw_load_fwcdr_parquet.py   
+
+select count(*) from `dfs`.`/HDS_VOL_HIVE/FWCDR_PQ` where  srcip_num=73150056012;
+hostname    
+
+hadoop jar /home/mapr/pq_tools/parquet-tools-1.11.0.jar meta /HDS_VOL_TMP/el_tra/par_256/part-00000-56b98706-4d2                       a-4746-b025-1a7d1d6a2238-c000.gz.parquet | grep "row group"                                                                                                                                                                                                                                                               
+                                                                                                                                                             
+                                                               
+
+
+
+
+k,v
+
+key ,value
+id1, v1
+id2,v2
+
+
+=»k1,col1,col2, col3
+key -> index -> b tree(query fast)
+
+k1,col1
+k1,col2
+k1,col3
+
+
+------
+replication  1set ->duplicate x3 ->srv -1 -3 
+
+file -> block
+
+Server 1-> hd1 hd2 hd3 --> storage pool sp(1)[hd1,hd2] ,sp(2) hd3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

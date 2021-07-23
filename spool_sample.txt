@@ -1,0 +1,34 @@
+sqlplus /@nbpdw_bpbat
+
+set head off
+set verify off
+set trimspool on
+set newpage 0
+set pagesize 0
+set lines 250
+set termout off
+set serveroutput off
+set feedback off
+set echo off
+
+alter session force parallel query parallel 20;
+alter session force parallel dml parallel 20;
+
+
+spool /app/adwbat/BP/reload/unload_cnss_daily_summ.txt
+
+ select 
+     to_char(accs_date,'YYMM')||'WEEK'||to_char(accs_date,'W')||'|'||
+    tO_char(ACCS_DATE,'yyyy-mm-dd')    ||'|'||
+    MSISDN||'|'||
+    sum(usg_mb)       
+ from cnss_daily_summ 
+ where (upper(app_name) like '%ZOOM%'
+    or upper(service_name) like '%ZOOM%')
+   and accs_date between date '2020-01-16' and date '2020-03-31'
+    group by to_char(accs_date,'YYMM')||'WEEK'||to_char(accs_date,'W')
+     ,ACCS_DATE
+    ,MSISDN;
+spool off;
+quit;
+

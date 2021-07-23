@@ -1,0 +1,634 @@
+pyspark
+myRange = spark.range(1000).toDF("number") 
+
+divisBy2 = myRange.where("number % 2 = 0") 
+
+divisBy2.count()
+
+flightData2015 = spark.read.option("inferSchema", "true").option("header", "true").csv("/data/flight-data/csv/2015-summary.csv")
+flightData2015.take(3) 
+
+flightData2015.sort("count").explain() 
+
+spark.conf.set("spark.sql.shuffle.partitions", "5") 
+flightData2015.sort("count").take(2) 
+flightData2015.createOrReplaceTempView("flight_data_2015") 
+
+sqlWay = spark.sql(""" SELECT DEST_COUNTRY_NAME, count(1) FROM flight_data_2015 GROUP BY DEST_COUNTRY_NAME """) 
+ 
+dataFrameWay = flightData2015.groupBy('DEST_COUNTRY_NAME).count() 
+ 
+sqlWay.explain 
+dataFrameWay.explain
+
+spark.sql("SELECT max(count) from flight_data_2015").take(1) 
+
+maxSql = spark.sql(""" SELECT DEST_COUNTRY_NAME, sum(count) as destination_total FROM flight_data_2015 GROUP BY DEST_COUNTRY_NAME ORDER BY sum(count) DESC LIMIT 5 """) 
+maxSql.show()
+
+from pyspark.sql.functions import desc 
+ 
+flightData2015.groupBy("DEST_COUNTRY_NAME").sum("count").withColumnRenamed("sum(count)", "destination_total").sort(desc("destination_total")).limit(5).show()
+flightData2015.groupBy("DEST_COUNTRY_NAME").sum("count").withColumnRenamed("sum(count)", "destination_total").sort(desc("destination_total")).limit(5).explain()
+
+
+./bin/spark-submit ./examples/src/main/python/pi.py 10
+
+// in Scala 
+case class Flight(DEST_COUNTRY_NAME: String,ORIGIN_COUNTRY_NAME: String,count: BigInt) 
+val flightsDF = spark.read.parquet("/data/flight-data/parquet/2010-summary.parquet/") 
+val flights = flightsDF.as[Flight]
+
+// in Scala 
+flights.filter(flight_row => flight_row.ORIGIN_COUNTRY_NAME != "Canada").map(flight_row => flight_row).take(5) 
+flights.take(5).filter(flight_row => flight_row.ORIGIN_COUNTRY_NAME != "Canada").map(fr => Flight(fr.DEST_COUNTRY_NAME, fr.ORIGIN_COUNTRY_NAME, fr.count + 5)) 
+
+staticDataFrame = spark.read.format("csv").option("header", "true").option("inferSchema", "true").load("/data/retail-data/by-day/*.csv") 
+ 
+staticDataFrame.createOrReplaceTempView("retail_data")
+staticSchema = staticDataFrame.schema 
+
+
+
+// in Scala 
+
+from pyspark.sql.functions import window, column, desc, col 
+staticDataFrame.selectExpr("CustomerId","(UnitPrice * Quantity) as total_cost","InvoiceDate").groupBy(col("CustomerId"),window(col("InvoiceDate"), "1 day")).sum("total_cost").show(5) 
+
+spark.conf.set("spark.sql.shuffle.partitions", "5") 
+ 
+val streamingDataFrame = spark.readStream.schema(staticSchema).option("maxFilesPerTrigger", 1).format("csv").option("header", "true").load("/data/retail-data/by-day/*.csv") 
+
+
+
+streamingDataFrame.isStreaming 
+purchaseByCustomerPerHour = streamingDataFrame.selectExpr("CustomerId","(UnitPrice * Quantity) as total_cost","InvoiceDate").groupBy($"CustomerId", window($"InvoiceDate", "1 day")).sum("total_cost") 
+
+purchaseByCustomerPerHour.writeStream.format("memory").queryName("customer_purchases").outputMode("complete").start() 
+
+spark.sql("""   SELECT *   FROM customer_purchases   ORDER BY `sum(total_cost)` DESC   """).show(5) 
+
+
+purchaseByCustomerPerHour.writeStream.format("console").queryName("customer_purchases_2").outputMode("complete").start()
+
+from pyspark.sql import Row spark.sparkContext.parallelize([Row(1), Row(2), Row(3)]).toDF() 
+
+df = spark.range(500).toDF("number") 
+df.select(df["number"] + 10) 
+
+spark.range(2).collect() 
+
+from pyspark.sql.types import * 
+b = ByteType()  
+
+df = spark.read.format("json").load("/data/flight-data/json/2015-summary.json") 
+
+df.printSchema() 
+
+ad hoc analysis: schema-on-read
+
+spark.read.format("json").load("/data/flight-data/json/2015summary.json").schema 
+Python中返回以下内容： 
+org.apache.spark.sql.types.StructType = ... StructType(StructField(DEST_COUNTRY_NAME,StringType,true), StructField(ORIGIN_COUNTRY_NAME,StringType,true), StructField(count,LongType,true))
+
+from pyspark.sql.types import StructField, StructType, StringType, LongType 
+myManualSchema = StructType([ StructField("DEST_COUNTRY_NAME", StringType(), True), StructField("ORIGIN_COUNTRY_NAME", StringType(), True), StructField("count", LongType(), False, metadata={"hello":"world"}) ]) 
+df = spark.read.format("json").schema(myManualSchema).load("/data/flight-data/json/2015-summary.json") 
+
+from pyspark.sql.functions import col, column 
+col("someColumnName") 
+column("someColumnName") 
+
+// in Scala 
+$"myColumn" 
+'myColumn 
+
+df.col("count") 
+expr("someCol")等同于 col("someCol")
+
+expr("someCol - 5")与执行 col("someCol") -5，甚至是 expr("someCol") – 5
+
+(((col("someCol") + 5) * 200) - 6) < col("otherCol")   
+
+from pyspark.sql.functions import expr 
+expr("(((someCol + 5) * 200) - 6) < otherCol") 
+
+spark.read.format("json").load("/data/flight-data/json/2015summary.json").columns 
+df.first() 
+
+from pyspark.sql import Row 
+myRow = Row("Hello", None, 1, False) 
+myRow[0] myRow[2] 
+
+df = spark.read.format("json").load("/data/flight-data/json/2015-summary.json") 
+df.createOrReplaceTempView("dfTable") 
+
+// in Scala 
+import org.apache.spark.sql.Row 
+import org.apache.spark.sql.types.{StructField, StructType, StringType, LongType} 
+val myManualSchema = new StructType(Array( new StructField("some", StringType, true), new StructField("col", StringType, true), new StructField("names", LongType, false))) 
+val myRows = Seq(Row("Hello", null, 1L)) 
+val myRDD = spark.sparkContext.parallelize(myRows) 
+val myDf = spark.createDataFrame(myRDD, myManualSchema) 
+myDf.show() 
+
+// in Scala 
+val myDF = Seq(("Hello", 2, 1L)).toDF("col1", "col2", "col3") 
+
+# in Python 
+from pyspark.sql import Row 
+from pyspark.sql.types import StructField, StructType, StringType, LongType 
+myManualSchema = StructType([ StructField("some", StringType(), True), StructField("col", StringType(), True), StructField("names", LongType(), False) ]) 
+
+myRow = Row("Hello", None, 1) 
+myDf = spark.createDataFrame([myRow], myManualSchema) 
+myDf.show() 
+
+：处 理列或表达式时的 select 方法，以及处理字符串表达式时的 selectExpr 方法
+org.apache.spark.sql.functions 包中包含一组函数 方法用来提供额外支持。 
+
+df.select("DEST_COUNTRY_NAME").show(2) 
+
+df.select("DEST_COUNTRY_NAME", "ORIGIN_COUNTRY_NAME").show(2)
+
+
+from pyspark.sql.functions import expr, col, column 
+df.select( expr("DEST_COUNTRY_NAME"), col("DEST_COUNTRY_NAME"), column("DEST_COUNTRY_NAME")).show(2) 
+
+df.select(col("DEST_COUNTRY_NAME"), "DEST_COUNTRY_NAME") //false
+
+df.select(expr("DEST_COUNTRY_NAME AS destination")).show(2) 
+
+df.select(expr("DEST_COUNTRY_NAME as destination").alias("DEST_COUNTRY_NAME")).show(2) 
+df.selectExpr("DEST_COUNTRY_NAME as newColumnName", "DEST_COUNTRY_NAME").show(2) 
+
+df.selectExpr( "*", columns "(DEST_COUNTRY_NAME = ORIGIN_COUNTRY_NAME) as withinCountry").show(2)
+
+df.selectExpr("avg(count)", "count(distinct(DEST_COUNTRY_NAME))").show(2) 
+
+from pyspark.sql.functions import lit 
+df.select(expr("*"), lit(1).alias("One")).show(2) 
+
+
+df.withColumn("numberOne", lit(1)).show(2)
+df.withColumn("withinCountry", expr("ORIGIN_COUNTRY_NAME == DEST_COUNTRY_NAME")).show(2) 
+
+df.withColumn("Destination", expr("DEST_COUNTRY_NAME")).columns
+df.withColumnRenamed("DEST_COUNTRY_NAME", "dest").columns ... dest, ORIGIN_COUNTRY_NAME, count 
+
+dfWithLongColName = df.withColumn( "This Long Column-Name", expr("ORIGIN_COUNTRY_NAME")) 
+
+dfWithLongColName.selectExpr( "`This Long Column-Name`", "`This Long Column-Name` as `new col`").show(2) 
+dfWithLongColName.createOrReplaceTempView("dfTableLong")
+
+dfWithLongColName.select(expr("`This Long Column-Name`")).columns 
+set spark.sql.caseSensitive true
+
+df.drop("ORIGIN_COUNTRY_NAME").columns 
+
+dfWithLongColName.drop("ORIGIN_COUNTRY_NAME", "DEST_COUNTRY_NAME") 
+df.withColumn("count2", col("count").cast("long")) 
+
+df.filter(col("count") < 2).show(2) d
+f.where("count < 2").show(2)
+
+df.where(col("count") < 2).where(col("ORIGIN_COUNTRY_NAME") != "Croatia").show(2) 
+df.select("ORIGIN_COUNTRY_NAME", "DEST_COUNTRY_NAME").distinct().count() 
+df.select("ORIGIN_COUNTRY_NAME").distinct().count() 
+
+
+seed = 5 
+withReplacement = False 
+fraction = 0.5 
+df.sample(withReplacement, fraction, seed).count() 
+
+
+dataFrames = df.randomSplit([0.25, 0.75], seed) 
+dataFrames[0].count() > dataFrames[1].count()
+
+from pyspark.sql import Row 
+schema = df.schema 
+newRows = [ Row("New Country", "Other Country", 5L), Row("New Country 2", "Other Country 3", 1L) ] 
+parallelizedRows = spark.sparkContext.parallelize(newRows) 
+newDF = spark.createDataFrame(parallelizedRows, schema) 
+df.union(newDF).where("count = 1").where(col("ORIGIN_COUNTRY_NAME") != "United States").show()
+
+dataframe to table or view
+
+df.sort("count").show(5) 
+df.orderBy("count", "DEST_COUNTRY_NAME").show(5) 
+df.orderBy(col("count"), col("DEST_COUNTRY_NAME")).show(5)
+
+from pyspark.sql.functions import desc, asc 
+df.orderBy(expr("count desc")).show(2) 
+df.orderBy(col("count").desc(), col("DEST_COUNTRY_NAME").asc()).show(2)
+
+asc_nulls_first 
+desc_nulls_first 
+asc_nulls_last
+ desc_nulls_last 
+
+spark.read.format("json").load("/data/flight-data/json/*-summary.json").sortWithinPartitions("count")
+
+df.orderBy(expr("count desc")).limit(6).show(
+df.rdd.getNumPartitions() 
+df.repartition(5) 
+df.repartition(col("DEST_COUNTRY_NAME")) 
+df.repartition(5, col("DEST_COUNTRY_NAME")) 
+
+df.repartition(5, col("DEST_COUNTRY_NAME")).coalesce(2) 
+
+collectDF = df.limit(10) 
+collectDF.take(5) 
+collectDF.show() 
+collectDF.show(5, False) 
+collectDF.collect() 
+
+collectDF.toLocalIterator() 
+
+
+DataFrame(Dataset)
+
+
+http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Dataset
+
+ Dataset: DataFrameStatFunctions  DataFrameNaFunctions
+
+
+Column: http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.Column
+org.apache.spark.sql.functions 
+
+df = spark.read.format("csv").option("header"， "true").option("inferSchema"， "true").load("/data/retail-data/by-day/2010-12-01.csv") 
+df.printSchema() 
+df.createOrReplaceTempView("dfTable")
+
+from pyspark.sql.functions import lit 
+df.select(lit(5),lit("five"),lit(5.0))
+
+from pyspark.sql.functions import col 
+df.where(col("InvoiceNo") != 536365).select("InvoiceNo","Description").show(5, False)
+
+and， or， true和 false
+
+df.where("InvoiceNo = 536365") .show(5, false) 
+df.where("InvoiceNo <> 536365") .show(5, false) 
+
+# in Python 
+from pyspark.sql.functions import instr 
+priceFilter = col("UnitPrice") > 600 
+descripFilter = instr(df.Description, "POSTAGE") >= 1 
+df.where(df.StockCode.isin("DOT")).where(priceFilter | descripFilter).show() 
+-- in SQL 
+SELECT * FROM dfTable WHERE StockCode in ("DOT") AND(UnitPrice > 600 OR instr(Description， "POSTAGE") >= 1)
+
+
+from pyspark.sql.functions import instr 
+DOTCodeFilter = col("StockCode") == "DOT" 
+priceFilter = col("UnitPrice") > 600 
+descripFilter = instr(col("Description")， "POSTAGE") >= 1 
+df.withColumn("isExpensive"， DOTCodeFilter & (priceFilter | descripFilter)).where("isExpensive").select("unitPrice"， "isExpensive").show(5) 
+
+-- in SQL 
+SELECT UnitPrice， (StockCode = 'DOT' AND (UnitPrice > 600 OR instr(Description， "POSTAGE") >= 1)) as isExpensive 
+FROM dfTable WHERE (StockCode = 'DOT' AND (UnitPrice > 600 OR instr(Description， "POSTAGE") >= 1)) 
+
+from pyspark.sql.functions import expr 
+df.withColumn("isExpensive"， expr("NOT UnitPrice <= 250")).where("isExpensive").select("Description"， "UnitPrice").show(5)
+ 
+df.where(col("Description").eqNullSafe("hello")).show() 
+
+from pyspark.sql.functions import expr， pow 
+fabricatedQuantity = pow(col("Quantity") * col("UnitPrice")， 2) + 5 
+df.select(expr("CustomerId")， fabricatedQuantity.alias("realQuantity")).show(2) 
+df.selectExpr( "CustomerId"， "(POWER((Quantity * UnitPrice)， 2.0) + 5) as realQuantity").show(2)
+
+df.select(round(col("UnitPrice")， 1).alias("rounded")， col("UnitPrice")).show(5)  
+from pyspark.sql.functions import lit， round， bround 
+df.select(round(lit("2.5"))， bround(lit("2.5"))).show(2) 
+
+from pyspark.sql.functions import corr 
+df.stat.corr("Quantity"， "UnitPrice") 
+df.select(corr("Quantity"， "UnitPrice")).show() 
+
+df.describe().show() 
+
+
+from pyspark.sql.functions import count， mean， stddev_pop， min， max  
+
+
+colName = "UnitPrice" 
+quantileProbs = [0.5] 
+relError = 0.05 
+df.stat.approxQuantile("UnitPrice"， quantileProbs， relError)
+
+df.stat.crosstab("StockCode"， "Quantity").show() 
+df.stat.freqItems(["StockCode"， "Quantity"]).show() 
+
+from pyspark.sql.functions import monotonically_increasing_id 
+df.select(monotonically_increasing_id()).show(2) 
+
+from pyspark.sql.functions import initcap 
+df.select(initcap(col("Description"))).show() 
+
+from pyspark.sql.functions import lower， upper 
+df.select(col("Description")， lower(col("Description"))， upper(lower(col("Description")))).show(2) 
+
+from pyspark.sql.functions import lit， ltrim， rtrim， rpad， lpad， trim 
+df.select( ltrim(lit(" HELLO ")).alias("ltrim")， rtrim(lit(" HELLO ")).alias("rtrim")， trim(lit(" HELLO ")).alias("trim")， lpad(lit("HELLO")， 3， " ").alias("lp")， rpad(lit("HELLO")， 10， " ").alias("rp")).show(2) 
+
+regexp_extract和 regexp_replace  正则
+// in Scala 
+import org.apache.spark.sql.functions.regexp_replace 
+val simpleColors = Seq("black"， "white"， "red"， "green"， "blue") 
+val regexString = simpleColors.map(_.toUpperCase).mkString("|") 
+// “|”在正则表达式中是“或“的意思 
+df.select( regexp_replace(col("Description")， regexString， "COLOR").alias("color_clean")， 
+col("Description")).show(2) 
+
+# in Python 
+from pyspark.sql.functions import regexp_replace 
+regex_string = "BLACK|WHITE|RED|GREEN|BLUE" 
+df.select( regexp_replace(col("Description")， regex_string， "COLOR").alias("color_clean")， 
+col("Description")).show(2)
+
+-- in SQL 
+SELECT regexp_replace(Description， 'BLACK|WHITE|RED|GREEN|BLUE'， 'COLOR') as color_clean， Description FROM dfTable
++--------------------+--------------------+ 
+|         color_clean|         Description| 
++--------------------+--------------------+ 
+|COLOR HANGING HEA...|WHITE HANGING HEA...|
+| COLOR METAL LANTERN| WHITE METAL LANTERN|
+ +--------------------+--------------------+
+
+
+from pyspark.sql.functions 
+import translate 
+df.select(translate(col("Description")， "LEET"， "1337")，col("Description")).show(2)
+
+from pyspark.sql.functions 
+import regexp_extract 
+extract_str = "(BLACK|WHITE|RED|GREEN|BLUE)" 
+df.select( regexp_extract(col("Description")， extract_str， 1).alias("color_clean")， col("Description")).show(2)
+
+// in Scala 
+val containsBlack = col("Description").contains("BLACK") 
+val containsWhite = col("DESCRIPTION").contains("WHITE") 
+df.withColumn("hasSimpleColor"， containsBlack.or(containsWhite)).where("hasSimpleColor") .select("Description").show(3， false) 
+
+
+from pyspark.sql.functions import instr 
+containsBlack = instr(col("Description")， "BLACK") >= 1 
+containsWhite = instr(col("Description")， "WHITE") >= 1 
+df.withColumn("hasSimpleColor"， containsBlack | containsWhite).where("hasSimpleColor").select("Description").show(3， False)
+
+
+
+// in Scala 
+val simpleColors = Seq("black"， "white"， "red"， "green"， "blue") 
+val selectedColumns = simpleColors.map(color => { col("Description").contains(color.toUpperCase).alias(s"is_$color") }):+expr("*") // 也可以添加该值 
+df.select(selectedColumns:_*).where(col("is_white").or(col("is_red"))) .select("Description").show(3， false)  
++----------------------------------+ 
+|Description | 
++----------------------------------+ 
+|WHITE HANGING HEART T-LIGHT HOLDER| 
+|WHITE METAL LANTERN | 
+|RED WOOLLY HOTTIE WHITE HEART. | 
++----------------------------------+ 
+用 Python 来实现就很容易。在这种情况下，将使用 locate函数，它返回整数位置 (从 1 开始)然后将返回值转换为布尔值之后再使用它： 
+# in Python 
+from pyspark.sql.functions import expr， locate 
+simpleColors = ["black"， "white"， "red"， "green"， "blue"] 
+def color_locator(column， color_string): return locate(color_string.upper()， column).cast("boolean").alias("is_" + c) 
+selectedColumns = [color_locator(df.Description， c) for c in simpleColors] 
+selectedColumns.append(expr("*")) # has to a be Column type 
+df.select(*selectedColumns).where(expr("is_white OR is_red"))\ .select("Description").show(3， False) 
+这个简单的特性通常可以帮助你以一种易于理解和扩展的方式以编程方式生成列或 Boolean 过 滤器。此外，我们还可以把它扩展到计算给定输入值的最小公分母，或者一个数字是否是素 数。
+
+spark.conf.sessionLocalTimeZone
+
+df.printSchema() 
+root
+|-- InvoiceDate: timestamp (nullable = true) 
+
+
+# in Python 
+from pyspark.sql.functions import current_date, current_timestamp 
+dateDF = spark.range(10).withColumn("today"， current_date()).withColumn("now"， current_timestamp()) 
+dateDF.createOrReplaceTempView("dateTable")
+dateDF.printSchema()
+root |-- id: long (nullable = false) 
+     |-- today: date (nullable = false) 
+     |-- now: timestamp (nullable = false) 
+
+
+# in Python 
+from pyspark.sql.functions import date_add， date_sub 
+dateDF.select(date_sub(col("today")， 5)， date_add(col("today")， 5)).show(1) 
++------------------+------------------+ 
+|date_sub(today， 5)|date_add(today， 5)|
++------------------+------------------+ 
+| 2017-06-12| 2017-06-22| 
++------------------+------------------+ 
+
+// in Scala 
+import org.apache.spark.sql.functions.{datediff， months_between， to_date} 
+dateDF.withColumn("week_ago"， date_sub(col("today")， 7)) .select(datediff(col("week_ago")， col("today"))).show(1) 
+dateDF.select( to_date(lit("2016-01-01")).alias("start")， to_date(lit("2017-05-22")).alias("end")) .select(months_between(col("start")， col("end"))).show(1) 
+
+# in Python 
+from pyspark.sql.functions import datediff， months_between， to_date 
+dateDF.withColumn("week_ago"， date_sub(col("today")， 7)).select(datediff(col("week_ago")， col("today"))).show(1) 
+dateDF.select( to_date(lit("2016-01-01")).alias("start")， to_date(lit("2017-05-22")).alias("end")).select(months_between(col("start")， col("end"))).show(1)
+ 
+-- in SQL SELECT to_date('2016-01-01')， months_between('2016-01-01'， '2017-01-01')， datediff('2016-01-01'， '2017-01-01') 
+FROM dateTable 
++-------------------------+ |datediff(week_ago， today)| 
++-------------------------+ | -7| +-------------------------+ +--------------------------+ |months_between(start， end)| 
++--------------------------+ | -16.67741935| +--------------------------+ 
+
+
+# in Python 
+from pyspark.sql.functions import to_date， lit 
+spark.range(5).withColumn("date",lit("2017-01-01")).select(to_date(col("date"))).show(1) 
+
+dateDF.select(to_date(lit("2016-20-12"))，to_date(lit("2017-12-11"))).show(1) 
++-------------------+-------------------+ 
+|to_date(2016-20-12)|to_date(2017-12-11)| 
++-------------------+-------------------+ 
+|               null|         2017-12-11| 
++-------------------+-------------------+
+
+
+# in Python 
+from pyspark.sql.functions import to_date 
+dateFormat = "yyyy-dd-MM" 
+cleanDateDF = spark.range(1).select( to_date(lit("2017-12-11")， dateFormat).alias("date")， to_date(lit("2017-20-12")， dateFormat).alias("date2")) 
+cleanDateDF.createOrReplaceTempView("dateTable2") 
+
+# in Python
+from pyspark.sql.functions import to_timestamp 
+cleanDateDF.select(to_timestamp(col("date")， dateFormat)).show()
+
+-- in SQL 
+SELECT cast(to_date("2017-01-01"， "yyyy-dd-MM") as timestamp) 
+
+根据 yyyy-MM-dd 这种正确格式来指定字符串
+cleanDateDF.filter(col("date2") > lit("2017-12-12")).show()
+cleanDateDF.filter(col("date2") > "'2017-12-12'").show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.google.com/search?rlz=1C1GCEB_enHK864HK864&sxsrf=ALeKk01m9gCbKfx5R0qC0txy4ixQfgfi1Q%3A1589522922701&ei=6jG-XvSvKpeo-QbrrZvYCA&q=spark+load+csv&oq=spark+load&gs_lcp=CgZwc3ktYWIQARgAMgIIADIHCAAQFBCHAjIHCAAQFBCHAjICCAAyAggAMgIIADICCAAyAggAMgIIADICCAA6BAgAEEc6CQgAEEMQRhD5AToECAAQQzoECAAQAzoFCAAQywFQtRlY3SJgsFhoAHABeACAAYECiAGICJIBBTAuMi4zmAEAoAEBqgEHZ3dzLXdpeg&sclient=psy-ab
+
+https://spark.apache.org/
+
+https://mapr.com/docs/60/Spark/LoadDataDataFrameExplicitSchema.html
+
+https://mapr.com/support/s/?language=en_US
+
+https://mapr.com/docs/61/Spark/Spark.html
+
+
+
+
+
+
+
+http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.DataFrame
+spark.pdf
+process.pdf
+mapr spark
+spark 
+
+
+
+
+

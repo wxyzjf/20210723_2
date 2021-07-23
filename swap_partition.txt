@@ -1,0 +1,73 @@
+dw_load_smsfw_cdr
+insert into gprs <===== lock gprs table (100 million )
+
+
+gprs 
+partition key 
+	gprs_200101
+	gprs_200102
+	gprs_200103
+	gprs_200104
+
+
+
+
+loading data (200104 ,200103)
+
+
+
+xtern table 
+
+
+1) -> gprs_tmp1 
+2) -> for  f eacho partition key in gprs_tmp1 loop (200104 ,200103)	
+   loop 1
+	truncate table gprs_tmp2
+	insert into gprs_tmp2 select* from gprs_tmp1 where partition key = 200103
+	reinsert into gprs_tmp2 select * from gprs where partition_key = 200103
+
+---»	swap gprs_tmp2 with gprs specify partition 
+
+
+create table a  partition key call_start_date 
+
+create table b 
+
+insert 10 records -> b
+
+swap partition b  -> a 
+
+create table tbl1(
+	cust_num
+subr_num
+call_start_date <===partition key
+) partition by (call_Start_date)
+
+.......
+
+
+create table tbl2(
+cust_num
+subr_num
+call_start_date)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BP.Q_SGS_USG_DTL_BUNDLE
+
+
